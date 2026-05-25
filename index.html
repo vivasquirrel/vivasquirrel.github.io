@@ -1,1 +1,639 @@
 
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Viva Squirrel — Quietly gathering ideas, patterns, and tiny tools for what comes next." />
+  <title>Viva Squirrel</title>
+  <style>
+    :root {
+      --bg: #0f1115;
+      --panel: rgba(255, 255, 255, 0.055);
+      --panel-strong: rgba(255, 255, 255, 0.085);
+      --ink: #f7efe3;
+      --muted: rgba(247, 239, 227, 0.66);
+      --muted-2: rgba(247, 239, 227, 0.44);
+      --line: rgba(247, 239, 227, 0.13);
+      --accent: #d59a54;
+      --accent-soft: rgba(213, 154, 84, 0.18);
+      --brown: #7c4a1d;
+      --squirrel: #f4d4a1;
+      --shadow: 0 28px 90px rgba(0, 0, 0, 0.34);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 20% 0%, rgba(213, 154, 84, 0.16), transparent 30%),
+        radial-gradient(circle at 86% 18%, rgba(124, 74, 29, 0.16), transparent 28%),
+        linear-gradient(145deg, #0f1115 0%, #17140f 54%, #101217 100%);
+    }
+
+    body { padding: 28px; }
+
+    .shell {
+      width: min(1160px, 100%);
+      min-height: calc(100vh - 56px);
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 14px 0;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      font-size: 19px;
+    }
+
+    .mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: var(--ink);
+      color: #121212;
+      font-size: 12px;
+      font-weight: 950;
+      box-shadow: 0 16px 42px rgba(0, 0, 0, 0.28);
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    nav span {
+      padding: 9px 12px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+    }
+
+    .nav-cta {
+      color: var(--ink);
+      border-color: var(--line);
+      background: var(--panel);
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      gap: 20px;
+      align-items: stretch;
+      flex: 1;
+    }
+
+    .hero,
+    .card {
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, var(--panel-strong), var(--panel));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(20px);
+    }
+
+    .hero {
+      min-height: 650px;
+      border-radius: 34px;
+      padding: clamp(32px, 5vw, 58px);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(247, 239, 227, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(247, 239, 227, 0.04) 1px, transparent 1px);
+      background-size: 34px 34px;
+      mask-image: linear-gradient(to bottom, black, transparent 72%);
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -120px;
+      bottom: -180px;
+      width: 440px;
+      height: 440px;
+      border-radius: 50%;
+      border: 1px solid rgba(213, 154, 84, 0.22);
+      background: radial-gradient(circle, rgba(213, 154, 84, 0.14), transparent 66%);
+      pointer-events: none;
+    }
+
+    .content { position: relative; z-index: 1; }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      margin-bottom: 24px;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 850;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      padding: 9px 12px;
+      border: 1px solid rgba(213, 154, 84, 0.24);
+      border-radius: 999px;
+      background: rgba(213, 154, 84, 0.08);
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 760px;
+      font-size: clamp(54px, 7.4vw, 104px);
+      line-height: 0.91;
+      letter-spacing: -0.085em;
+    }
+
+    .gradient {
+      background: linear-gradient(90deg, var(--ink), #e8c48d, var(--accent));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .subtitle {
+      margin: 28px 0 0;
+      max-width: 650px;
+      color: var(--muted);
+      font-size: clamp(18px, 2vw, 23px);
+      line-height: 1.46;
+      letter-spacing: -0.035em;
+    }
+
+    .subtitle.small {
+      margin-top: 16px;
+      font-size: clamp(14px, 1.35vw, 16px);
+      color: var(--muted-2);
+    }
+
+    .mission-line {
+      margin-top: 28px;
+      max-width: 650px;
+      padding: 18px 20px;
+      border: 1px solid rgba(213, 154, 84, 0.22);
+      border-radius: 22px;
+      background: rgba(213, 154, 84, 0.075);
+      color: rgba(247, 239, 227, 0.84);
+      font-size: clamp(15px, 1.5vw, 18px);
+      line-height: 1.55;
+      letter-spacing: -0.025em;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    a.button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 18px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 850;
+      transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+    }
+
+    a.button:hover { transform: translateY(-2px); }
+
+    .primary {
+      background: var(--ink);
+      color: #121212;
+    }
+
+    .secondary {
+      color: var(--ink);
+      background: transparent;
+      border: 1px solid var(--line);
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 44px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.035);
+      padding: 16px;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 22px;
+      letter-spacing: -0.04em;
+      color: var(--ink);
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted-2);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+    }
+
+    .side {
+      display: grid;
+      grid-template-rows: 1.25fr auto auto;
+      gap: 20px;
+    }
+
+    .card {
+      border-radius: 30px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .mascot-card {
+      min-height: 420px;
+      display: grid;
+      place-items: center;
+      padding: 30px;
+    }
+
+    .mascot-card::before {
+      content: "SIGNAL // NAMSAN NODE";
+      position: absolute;
+      top: 20px;
+      left: 22px;
+      color: var(--muted-2);
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: 0.13em;
+    }
+
+    .orb {
+      position: absolute;
+      right: -58px;
+      top: -58px;
+      width: 190px;
+      height: 190px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(213, 154, 84, 0.20), transparent 68%);
+      border: 1px solid rgba(213, 154, 84, 0.18);
+    }
+
+    .grid-dots {
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(247, 239, 227, 0.12) 1px, transparent 1px);
+      background-size: 18px 18px;
+      opacity: 0.34;
+      mask-image: linear-gradient(to bottom, black, transparent 72%);
+      pointer-events: none;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      padding: 24px;
+    }
+
+    .chip {
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.035);
+      border-radius: 999px;
+      padding: 9px 12px;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .mission { padding: 26px; }
+
+    .mission h2 {
+      margin: 0;
+      font-size: 24px;
+      letter-spacing: -0.055em;
+    }
+
+    .mission p {
+      margin: 12px 0 0;
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 14px;
+    }
+
+    .squirrel {
+      position: relative;
+      width: min(285px, 68vw);
+      aspect-ratio: 1;
+      filter: drop-shadow(0 28px 28px rgba(0, 0, 0, 0.32));
+      transform: scale(0.94);
+    }
+
+    .tail {
+      position: absolute;
+      right: 10px;
+      top: 44px;
+      width: 155px;
+      height: 220px;
+      border-radius: 80px 86px 100px 76px;
+      background: var(--squirrel);
+      border: 7px solid #24160d;
+      transform: rotate(16deg);
+    }
+
+    .tail::before, .tail::after {
+      content: "";
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      height: 17px;
+      border-radius: 999px;
+      background: var(--brown);
+    }
+
+    .tail::before { top: 76px; }
+    .tail::after { top: 128px; }
+
+    .body {
+      position: absolute;
+      left: 52px;
+      bottom: 36px;
+      width: 168px;
+      height: 178px;
+      border-radius: 48% 48% 44% 44%;
+      background: #e6b76e;
+      border: 7px solid #24160d;
+    }
+
+    .head {
+      position: absolute;
+      left: 26px;
+      top: 38px;
+      width: 206px;
+      height: 192px;
+      border-radius: 48% 48% 46% 46%;
+      background: var(--squirrel);
+      border: 7px solid #24160d;
+    }
+
+    .ear {
+      position: absolute;
+      width: 62px;
+      height: 62px;
+      border-radius: 50%;
+      background: var(--squirrel);
+      border: 7px solid #24160d;
+      top: 18px;
+    }
+
+    .ear.left { left: 34px; }
+    .ear.right { left: 164px; }
+
+    .stripe {
+      position: absolute;
+      top: 12px;
+      width: 14px;
+      height: 48px;
+      border-radius: 999px;
+      background: var(--brown);
+    }
+
+    .stripe.one { left: 78px; transform: rotate(-12deg); }
+    .stripe.two { left: 102px; height: 54px; }
+    .stripe.three { left: 128px; transform: rotate(12deg); }
+
+    .eye {
+      position: absolute;
+      top: 82px;
+      width: 24px;
+      height: 31px;
+      border-radius: 50%;
+      background: #17100a;
+    }
+
+    .eye.left { left: 64px; }
+    .eye.right { right: 64px; }
+
+    .eye::after {
+      content: "";
+      position: absolute;
+      top: 6px;
+      left: 7px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: white;
+    }
+
+    .nose {
+      position: absolute;
+      top: 118px;
+      left: 91px;
+      width: 30px;
+      height: 20px;
+      background: #17100a;
+      clip-path: polygon(6% 0, 94% 0, 50% 100%);
+      border-radius: 7px;
+    }
+
+    .mouth {
+      position: absolute;
+      top: 142px;
+      left: 93px;
+      width: 30px;
+      height: 20px;
+      border-bottom: 6px solid #a23e21;
+      border-right: 6px solid #a23e21;
+      border-radius: 0 0 18px 0;
+    }
+
+    .cheek {
+      position: absolute;
+      top: 126px;
+      width: 28px;
+      height: 16px;
+      border-radius: 50%;
+      background: rgba(245, 158, 109, 0.72);
+    }
+
+    .cheek.left { left: 38px; }
+    .cheek.right { right: 38px; }
+
+    .foot {
+      position: absolute;
+      bottom: 22px;
+      width: 58px;
+      height: 34px;
+      border-radius: 999px;
+      background: var(--squirrel);
+      border: 6px solid #24160d;
+    }
+
+    .foot.left { left: 56px; }
+    .foot.right { left: 150px; }
+
+    footer {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      color: var(--muted-2);
+      font-size: 13px;
+      padding: 0 4px 2px;
+    }
+
+    footer a {
+      color: var(--ink);
+      text-decoration: none;
+      font-weight: 800;
+    }
+
+    @media (max-width: 920px) {
+      body { padding: 18px; }
+      .shell { min-height: calc(100vh - 36px); }
+      nav span:not(.nav-cta) { display: none; }
+      main { grid-template-columns: 1fr; }
+      .hero { min-height: auto; border-radius: 28px; }
+      .metrics { grid-template-columns: 1fr; }
+      .mascot-card { min-height: 350px; }
+      footer { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div class="brand" aria-label="Viva Squirrel">
+        <span class="mark">VS</span>
+        <span>Viva Squirrel</span>
+      </div>
+      <nav aria-label="Viva Squirrel navigation">
+        <span>Lab</span>
+        <span>Signals</span>
+        <span>Systems</span>
+        <span class="nav-cta">Coming Soon</span>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="content">
+          <div class="eyebrow">For those who love and respect squirrels</div>
+          <h1>Building tiny tools with <span class="gradient">big squirrel energy.</span></h1>
+          <p class="subtitle">Like squirrels gathering acorns one by one, we collect sharp ideas, useful patterns, and small sparks of joy — quietly preparing useful things for people.</p>
+          <p class="subtitle small">Viva Squirrel is a small independent lab for playful systems, thoughtful tools, and experiments that may or may not be explained immediately. Those who love and respect squirrels are welcome to gather with us.</p>
+          <div class="mission-line">The squirrels will help release human anxiety, anger, and sadness — through small systems, calm interfaces, and useful things that quietly reduce the weight of everyday life.</div>
+          <div class="actions">
+            <a class="button primary" href="mailto:contact@vivasquirrel.com">Start a conversation</a>
+            <a class="button secondary" href="https://github.com/vivasquirrel" target="_blank" rel="noreferrer">View the lab</a>
+          </div>
+        </div>
+
+        <div class="metrics" aria-label="Viva Squirrel focus areas">
+          <div class="metric">
+            <strong>01</strong>
+            <span>Quiet research</span>
+          </div>
+          <div class="metric">
+            <strong>02</strong>
+            <span>Tiny systems</span>
+          </div>
+          <div class="metric">
+            <strong>∞</strong>
+            <span>Squirrel ambition</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="side">
+        <div class="card mascot-card" aria-label="Squirrel illustration">
+          <div class="grid-dots"></div>
+          <div class="orb"></div>
+          <div class="squirrel" role="img" aria-label="A cute squirrel mascot">
+            <div class="tail"></div>
+            <div class="ear left"></div>
+            <div class="ear right"></div>
+            <div class="body"></div>
+            <div class="head">
+              <div class="stripe one"></div>
+              <div class="stripe two"></div>
+              <div class="stripe three"></div>
+              <div class="eye left"></div>
+              <div class="eye right"></div>
+              <div class="cheek left"></div>
+              <div class="cheek right"></div>
+              <div class="nose"></div>
+              <div class="mouth"></div>
+            </div>
+            <div class="foot left"></div>
+            <div class="foot right"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="chip-row" aria-label="Viva Squirrel keywords">
+            <span class="chip">Independent Lab</span>
+            <span class="chip">Useful Experiments</span>
+            <span class="chip">Calm Interfaces</span>
+            <span class="chip">Emotional Load Reduction</span>
+            <span class="chip">Quiet Infrastructure</span>
+            <span class="chip">Squirrel Kingdom</span>
+            <span class="chip">Charging Under Namsan</span>
+            <span class="chip">Respect the Squirrels</span>
+            <span class="chip">World Domination, Kindly</span>
+          </div>
+        </div>
+
+        <div class="card mission">
+          <h2>The squirrels are gathering.</h2>
+          <p>Somewhere under Namsan, the squirrels are gathering energy with suspicious precision. Their larger mission is simple but not small: reduce the anxiety, anger, and sadness carried by humans. No loud announcements yet.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>© 2026 Viva Squirrel. The squirrels are gathering.</span>
+      <span>contact@vivasquirrel.com</span>
+    </footer>
+  </div>
+</body>
+</html>
